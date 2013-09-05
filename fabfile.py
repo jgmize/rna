@@ -14,10 +14,18 @@ os.environ['PYTHONPATH'] = os.pathsep.join([ROOT,])
 _local = functools.partial(_local, capture=False)
 
 
-def cover(test_case=''):
+def cover():
     """Run the test suite with coverage."""
-    _local('django-admin.py test --with-coverage --cover-package=' + APP_NAME)
+    _local('coverage erase')
+    _local('coverage run --branch `which django-admin.py` test')
+    _local('coverage report -m %s/*.py %s/*/*.py' % (APP_NAME, APP_NAME))
+    _local('coverage html %s/*.py %s/*/*.py' % (APP_NAME, APP_NAME))
 
+
+def manage(*args):
+    """Run arbitrary commands similar to manage.py."""
+    _local('django-admin.py '  + ' '.join(args))
+    
 
 def migrate(migration=''):
     """Update a testing database with south."""
