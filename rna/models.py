@@ -5,6 +5,26 @@
 from django.db import models
 from django.conf import settings
 
+from django_extensions.db.fields import CreationDateTimeField
+
+class TimeStampedModel(models.Model):
+    """
+    Replacement for django_extensions.db.models.TimeStampedModel
+    that updates the modified timestamp by default, but allows
+    that behavior to be overridden by passing a modified=False
+    parameter to the save method
+    """
+    created = CreationDateTimeField()
+    modified = models.DateTimeField(editable=False, blank=True, db_index=True)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        if kwargs.pop('modified', True):
+            self.modified = datetime.now() 
+        super(TimeStampedModel, self).save(*args, **kwargs)
+
 
 class Channel(models.Model):
     name = models.TextField(unique=True, db_column='channel_name')

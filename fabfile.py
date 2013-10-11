@@ -17,9 +17,9 @@ _local = functools.partial(_local, capture=False)
 def cover():
     """Run the test suite with coverage."""
     _local('coverage erase')
-    _local('coverage run --branch `which django-admin.py` test')
-    _local('coverage report -m %s/*.py %s/*/*.py' % (APP_NAME, APP_NAME))
-    _local('coverage html %s/*.py %s/*/*.py' % (APP_NAME, APP_NAME))
+    _local('coverage run --omit="*migrations* "--branch `which django-admin.py` test')
+    _local('coverage report --omit="*migrations*" -m %s/*.py %s/*/*.py' % (APP_NAME, APP_NAME))
+    _local('coverage html --omit="*migrations*" %s/*.py %s/*/*.py' % (APP_NAME, APP_NAME))
 
 
 def manage(*args):
@@ -37,10 +37,20 @@ def shell():
     _local('django-admin.py shell')
 
 
+def shell_plus():
+    """Start a django-extensions shell_plus with the test settings."""
+    _local('django-admin.py shell_plus')
+
+
 def serve():
     """Start the Django dev server."""
     _local('django-admin.py runserver')
 
+
+def runserver_plus():
+    """Start the django-extensions werkzeug dev server."""
+    _local('django-admin.py runserver_plus')
+    
 
 def syncdb():
     """Create a database for testing in the shell or server."""
