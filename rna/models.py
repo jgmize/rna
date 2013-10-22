@@ -54,7 +54,7 @@ class Note(models.Model):
     first_channel = models.ForeignKey(Channel, null=True, db_column='first_channel', blank=True, related_name='first_channel_notes')
     fixed_in_version = models.IntegerField(null=True, blank=True)
     fixed_in_channel = models.ForeignKey(Channel, null=True, db_column='fixed_in_channel', blank=True, related_name='fixed_in_channel_notes')
-    tag = models.IntegerField(null=True, blank=True)
+    tag = models.ForeignKey(Tag, null=True, blank=True, db_column='tag')
     product = models.ForeignKey(Product, null=True, db_column='product', blank=True)
     sort_num = models.IntegerField(null=True, blank=True)
     fixed_in_subversion = models.IntegerField(null=True, blank=True)
