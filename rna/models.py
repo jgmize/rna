@@ -47,6 +47,18 @@ class Product(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    text = models.TextField(db_column='tag_text')
+    sort_num = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('sort_num',)
+        db_table = u'Tags'
+
+    def __unicode__(self):
+        return self.text
+
+
 class Note(models.Model):
     bug_num = models.IntegerField(null=True, blank=True)
     description = models.TextField()
@@ -66,17 +78,6 @@ class Note(models.Model):
     def __unicode__(self):
         return self.description
 
-
-class Tag(models.Model):
-    text = models.TextField(db_column='tag_text')
-    sort_num = models.IntegerField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('sort_num',)
-        db_table = u'Tags'
-
-    def __unicode__(self):
-        return self.text
 
 
 class Release(models.Model):
