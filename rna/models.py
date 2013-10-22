@@ -47,6 +47,18 @@ class Product(models.Model):
         return self.name
 
 
+class Tag(models.Model):
+    text = models.TextField(db_column='tag_text')
+    sort_num = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        ordering = ('sort_num',)
+        db_table = u'Tags'
+
+    def __unicode__(self):
+        return self.text
+
+
 class Note(models.Model):
     bug_num = models.IntegerField(null=True, blank=True)
     description = models.TextField()
@@ -54,7 +66,7 @@ class Note(models.Model):
     first_channel = models.ForeignKey(Channel, null=True, db_column='first_channel', blank=True, related_name='first_channel_notes')
     fixed_in_version = models.IntegerField(null=True, blank=True)
     fixed_in_channel = models.ForeignKey(Channel, null=True, db_column='fixed_in_channel', blank=True, related_name='fixed_in_channel_notes')
-    tag = models.IntegerField(null=True, blank=True)
+    tag = models.ForeignKey(Tag, null=True, blank=True, db_column='tag')
     product = models.ForeignKey(Product, null=True, db_column='product', blank=True)
     sort_num = models.IntegerField(null=True, blank=True)
     fixed_in_subversion = models.IntegerField(null=True, blank=True)
@@ -66,17 +78,6 @@ class Note(models.Model):
     def __unicode__(self):
         return self.description
 
-
-class Tag(models.Model):
-    text = models.TextField(db_column='tag_text')
-    sort_num = models.IntegerField(null=True, blank=True)
-
-    class Meta:
-        ordering = ('sort_num',)
-        db_table = u'Tags'
-
-    def __unicode__(self):
-        return self.text
 
 
 class Release(models.Model):
