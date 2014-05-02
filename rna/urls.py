@@ -10,5 +10,6 @@ from . import views
 router = routers.DefaultRouter()
 router.register('notes', views.NoteViewSet)
 router.register('releases', views.ReleaseViewSet)
+router.register('releasenotes', views.ReleaseNoteViewSet)
 
 urlpatterns = router.urls

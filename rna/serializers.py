@@ -5,6 +5,8 @@
 from rest_framework import serializers
 from rest_framework.compat import parse_datetime
 
+from .models import Release
+
 
 def get_client_serializer_class(model_class):
     class ClientSerializer(UnmodifiedTimestampSerializer):
@@ -23,6 +25,12 @@ class HyperlinkedModelSerializerWithPkField(
         the parent class, which omits the pk field.
         """
         return self.get_field(model_field)
+
+
+class ReleaseNoteSerializer(HyperlinkedModelSerializerWithPkField):
+    class Meta:
+        model = Release
+        fields = [f.name for f in Release._meta.fields] + ['note_set']
 
 
 class UnmodifiedTimestampSerializer(serializers.ModelSerializer):
