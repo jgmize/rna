@@ -38,12 +38,12 @@ function bugUrl(bug) {
   return 'https://bugzilla.mozilla.org/show_bug.cgi?id=' + bug
 }
 
-var BugLink = React.createClass({displayName: 'BugLink',
+var BugLink = React.createClass({
   render: function() {
     if (this.props.bug) {
-      return React.DOM.a( {href:bugUrl(this.props.bug)}, this.props.bug);
+      return <a href={bugUrl(this.props.bug)}>{this.props.bug}</a>;
     } else {
-     return React.DOM.p(null);
+     return <p></p>;
     }
   }
 });
@@ -61,48 +61,48 @@ function tagOrKnownIssue(note) {
   }
 }
 
-var NoteRow = React.createClass({displayName: 'NoteRow',
+var NoteRow = React.createClass({
   removeNote: function() {
     this.props.removeNote(this.props.note);
   },
   render: function() {
     var note = this.props.note;
     return (
-      React.DOM.tr(null, 
-        React.DOM.td(null, React.DOM.a( {href:noteAdminUrl(note.id)}, "Edit")),
-        React.DOM.td(null, tagOrKnownIssue(note)),
-        React.DOM.td( {dangerouslySetInnerHTML:{__html: converter.makeHtml(note.note)}} ),
-        React.DOM.td(null, BugLink( {bug:note.bug} )),
-        React.DOM.td(null, note.sort_num),
-        React.DOM.td(null, React.DOM.input( {type:"button", value:"Remove", onClick:this.removeNote} ))
-      )
+      <tr>
+        <td><a href={noteAdminUrl(note.id)}>Edit</a></td>
+        <td>{tagOrKnownIssue(note)}</td>
+        <td dangerouslySetInnerHTML={{__html: converter.makeHtml(note.note)}} />
+        <td><BugLink bug={note.bug} /></td>
+        <td>{note.sort_num}</td>
+        <td><input type="button" value="Remove" onClick={this.removeNote} /></td>
+      </tr>
     );
   }
 });
 
-var NoteRows = React.createClass({displayName: 'NoteRows',
+var NoteRows = React.createClass({
   render: function() {
     var noteRows = this.props.data.map(function (note, index) {
-      return NoteRow( {key:note.id, note:note, removeNote:this.props.removeNote} );
+      return <NoteRow key={note.id} note={note} removeNote={this.props.removeNote} />;
     }.bind(this));
-    return React.DOM.tbody(null, noteRows);
+    return <tbody>{noteRows}</tbody>;
   }
 });
 
-var NoteHeader = React.createClass({displayName: 'NoteHeader',
+var NoteHeader = React.createClass({
   render: function() {
     var headers = this.props.data.map(function (header, index) {
-      return React.DOM.th( {key:header}, header);
+      return <th key={header}>{header}</th>;
     });
     return (
-      React.DOM.thead(null, 
-        React.DOM.tr(null, headers)
-      )
+      <thead>
+        <tr>{headers}</tr>
+      </thead>
     );
   }
 });
 
-var NoteTable = React.createClass({displayName: 'NoteTable',
+var NoteTable = React.createClass({
   addNote: function(id) {
     $.ajax({
       url: '/rna/notes/' + id + '/',
@@ -125,10 +125,10 @@ var NoteTable = React.createClass({displayName: 'NoteTable',
   render: function() {
     var headers = ['Edit', 'Tag/Known issue', 'Note', 'Bug', 'Sort num', 'Remove'];
     return (
-      React.DOM.table(null, 
-        NoteHeader( {data:headers} ),
-        NoteRows( {data:this.state.data, removeNote:this.removeNote} )
-      )
+      <table>
+        <NoteHeader data={headers} />
+        <NoteRows data={this.state.data} removeNote={this.removeNote} />
+      </table>
     );
   },
   getInitialState: function() {
@@ -160,6 +160,6 @@ var NoteTable = React.createClass({displayName: 'NoteTable',
 });
 
 React.renderComponent(
-  NoteTable( {url:notesApiUrl} ),
+  <NoteTable url={notesApiUrl} />,
   document.getElementById('note-table')
 );
